@@ -14,7 +14,7 @@
 //!
 //! ```json
 //! {
-//!     "method": "bevy/get",
+//!     "method": "bevy/world/components/get",
 //!     "id": 0,
 //!     "params": {
 //!         "entity": 4294967298,
@@ -35,7 +35,7 @@
 //!   response.
 //!
 //! * `method` is a string that specifies one of the possible [`BrpRequest`]
-//!   variants: `bevy/query`, `bevy/get`, `bevy/insert`, etc. It's case-sensitive.
+//!   variants: `bevy/world/components/query`, `bevy/world/components/get`, `bevy/world/components/insert`, etc. It's case-sensitive.
 //!
 //! * `params` is parameter data specific to the request.
 //!
@@ -102,7 +102,7 @@
 //! in the ECS. Each of these methods uses the `bevy/` prefix, which is a namespace reserved for
 //! BRP built-in methods.
 //!
-//! ### bevy/get
+//! ### bevy/world/components/get
 //!
 //! Retrieve the values of one or more components from an entity.
 //!
@@ -123,7 +123,7 @@
 //!
 //! `result`: A map associating each type name to its value on the requested entity.
 //!
-//! ### bevy/query
+//! ### bevy/world/components/query
 //!
 //! Perform a query over components in the ECS, returning all matching entities and their associated
 //! component values.
@@ -155,7 +155,7 @@
 //!
 //!
 //!
-//! ### bevy/spawn
+//! ### bevy/world/entity/spawn
 //!
 //! Create a new entity with the provided components and return the resulting entity ID.
 //!
@@ -165,7 +165,7 @@
 //! `result`:
 //! - `entity`: The ID of the newly spawned entity.
 //!
-//! ### bevy/destroy
+//! ### bevy/world/entity/destroy
 //!
 //! Despawn the entity with the given ID.
 //!
@@ -174,7 +174,7 @@
 //!
 //! `result`: null.
 //!
-//! ### bevy/remove
+//! ### bevy/world/components/remove
 //!
 //! Delete one or more components from an entity.
 //!
@@ -184,7 +184,7 @@
 //!
 //! `result`: null.
 //!
-//! ### bevy/insert
+//! ### bevy/world/components/insert
 //!
 //! Insert one or more components into an entity.
 //!
@@ -194,7 +194,7 @@
 //!
 //! `result`: null.
 //!
-//! ### `bevy/mutate_component`
+//! ### `bevy/world/components/mutate`
 //!
 //! Mutate a field in a component.
 //!
@@ -207,7 +207,7 @@
 //!
 //! `result`: null.
 //!
-//! ### bevy/reparent
+//! ### bevy/world/entity/reparent
 //!
 //! Assign a new parent to one or more entities.
 //!
@@ -218,7 +218,7 @@
 //!
 //! `result`: null.
 //!
-//! ### bevy/list
+//! ### bevy/world/resources/list
 //!
 //! List all registered components or all components present on an entity.
 //!
@@ -230,7 +230,7 @@
 //!
 //! `result`: An array of fully-qualified type names of components.
 //!
-//! ### bevy/get+watch
+//! ### bevy/world/components/get+watch
 //!
 //! Watch the values of one or more components from an entity.
 //!
@@ -258,7 +258,7 @@
 //! - `removed`: An array of fully-qualified type names of components removed from the entity
 //!   in the last tick.
 //!
-//! ### bevy/list+watch
+//! ### bevy/world/resources/list+watch
 //!
 //! Watch all components present on an entity.
 //!
@@ -510,7 +510,7 @@ pub enum RemoteMethodHandler {
     Watching(Box<dyn System<In = In<Option<Value>>, Out = BrpResult<Option<Value>>>>),
 }
 
-/// The [`SystemId`] of a function that implements a remote instant method (`bevy/get`, `bevy/query`, etc.)
+/// The [`SystemId`] of a function that implements a remote instant method (`bevy/world/components/get`, `bevy/world/components/query`, etc.)
 ///
 /// The first parameter is the JSON value of the `params`. Typically, an
 /// implementation will deserialize these as the first thing they do.
@@ -519,7 +519,7 @@ pub enum RemoteMethodHandler {
 /// automatically populate the `id` field before sending.
 pub type RemoteInstantMethodSystemId = SystemId<In<Option<Value>>, BrpResult>;
 
-/// The [`SystemId`] of a function that implements a remote watching method (`bevy/get+watch`, `bevy/list+watch`, etc.)
+/// The [`SystemId`] of a function that implements a remote watching method (`bevy/world/components/get+watch`, `bevy/world/resources/list+watch`, etc.)
 ///
 /// The first parameter is the JSON value of the `params`. Typically, an
 /// implementation will deserialize these as the first thing they do.
@@ -579,7 +579,7 @@ pub struct RemoteWatchingRequests(Vec<(BrpMessage, RemoteWatchingMethodSystemId)
 /// ```json
 /// {
 ///     "jsonrpc": "2.0",
-///     "method": "bevy/get",
+///     "method": "bevy/world/components/get",
 ///     "id": 0,
 ///     "params": {
 ///         "entity": 4294967298,
@@ -594,7 +594,7 @@ pub struct RemoteWatchingRequests(Vec<(BrpMessage, RemoteWatchingMethodSystemId)
 /// ```json
 /// {
 ///    "jsonrpc": "2.0",
-///    "method": "bevy/list",
+///    "method": "bevy/world/resources/list",
 ///    "id": 0,
 ///    "params": null
 ///}
